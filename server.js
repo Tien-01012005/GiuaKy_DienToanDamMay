@@ -31,7 +31,7 @@ app.set('views', path.join(__dirname, 'src/views'));
 
 // Middleware cung cấp thông tin sinh viên cố định cho tất cả các view (Footer bắt buộc)
 app.use((req, res, next) => {
-  res.locals.studentName = process.env.STUDENT_NAME || 'Tiến';
+  res.locals.studentName = process.env.STUDENT_NAME || 'Nguyễn Thị Thủy Tiên';
   res.locals.studentMSSV = process.env.STUDENT_MSSV || '23IT273';
   // Chữ số cuối MSSV = 3 => VAT = (3 + 5)% = 8%
   res.locals.vatRate = 8;
@@ -45,7 +45,7 @@ app.use('/', bookRoutes);
 app.listen(PORT, () => {
   console.log(`====================================================`);
   console.log(`🚀 Server đang chạy trên cổng: http://localhost:${PORT}`);
-  console.log(`👤 Sinh viên: ${process.env.STUDENT_NAME || 'Tiến'} - MSSV: ${process.env.STUDENT_MSSV || '23IT273'}`);
+  console.log(`👤 Sinh viên: ${process.env.STUDENT_NAME || 'Nguyễn Thị Thủy Tiên'} - MSSV: ${process.env.STUDENT_MSSV || '23IT273'}`);
   console.log(`📊 Mức VAT áp dụng: 8% (Chữ số cuối 3 + 5)%`);
   console.log(`====================================================`);
 });

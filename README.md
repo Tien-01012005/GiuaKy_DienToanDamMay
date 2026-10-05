@@ -1,7 +1,7 @@
 # BÁO CÁO BÀI TẬP GIỮA KỲ - MÔN: ĐIỆN TOÁN ĐÁM MÂY
 
 **Đề tài:** Ứng dụng Web Quản lý Sách trên Hạ tầng Đám mây (Cloud Computing)  
-**Sinh viên thực hiện:** Tiến  
+**Sinh viên thực hiện:** Nguyễn Thị Thủy Tiên  
 **Mã số sinh viên (MSSV):** `23IT273`  
 **Database Atlas:** `DB_23IT273`  
 
