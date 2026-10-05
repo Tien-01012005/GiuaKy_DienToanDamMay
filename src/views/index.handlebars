@@ -123,6 +123,7 @@
           <th>VAT</th>
           <th>Giá Sau Thuế</th>
           <th>Thời Gian Tạo</th>
+          <th style="text-align: center;">Thao Tác</th>
         </tr>
       </thead>
       <tbody>
@@ -136,6 +137,28 @@
           <td><span class="vat-tag">+{{this.vatRate}}%</span></td>
           <td><strong class="price-highlight">{{this.priceWithVAT}} VNĐ</strong></td>
           <td class="text-muted">{{this.createdAt}}</td>
+          <td style="text-align: center;">
+            <div class="action-buttons">
+              <button 
+                type="button" 
+                class="btn-action btn-edit" 
+                onclick="openEditModal('{{this._id}}', '{{this.bookCode}}', '{{this.title}}', '{{this.author}}', '{{this.price}}')"
+                title="Chỉnh sửa sách"
+              >
+                ✏️ Sửa
+              </button>
+              <form 
+                action="/books/delete/{{this._id}}" 
+                method="POST" 
+                style="display: inline;" 
+                onsubmit="return confirm('Bạn có chắc chắn muốn xóa cuốn sách \'{{this.title}}\' khỏi Cloud MongoDB Atlas?');"
+              >
+                <button type="submit" class="btn-action btn-delete" title="Xóa sách">
+                  🗑️ Xóa
+                </button>
+              </form>
+            </div>
+          </td>
         </tr>
         {{/each}}
       </tbody>
@@ -149,3 +172,70 @@
   </div>
   {{/if}}
 </section>
+
+<!-- Modal Chỉnh Sửa Sách (Ghi qua Write Account) -->
+<div id="editModal" class="modal-backdrop" style="display: none;">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title-box">
+        <h3>✏️ Chỉnh Sửa Thông Tin Sách</h3>
+        <span class="badge-role write-role">Write Pool Access</span>
+      </div>
+      <button type="button" class="modal-close" onclick="closeEditModal()">&times;</button>
+    </div>
+    <form id="editForm" method="POST" class="book-form">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="editBookCode">
+            Mã sản phẩm / Sách <span class="required">*</span>
+            <span class="hint-tag">Tiền tố: {{requiredPrefix}}</span>
+          </label>
+          <input type="text" id="editBookCode" name="bookCode" required autocomplete="off">
+        </div>
+
+        <div class="form-group">
+          <label for="editTitle">Tên sách <span class="required">*</span></label>
+          <input type="text" id="editTitle" name="title" required autocomplete="off">
+        </div>
+
+        <div class="form-group">
+          <label for="editAuthor">Tác giả <span class="required">*</span></label>
+          <input type="text" id="editAuthor" name="author" required autocomplete="off">
+        </div>
+
+        <div class="form-group">
+          <label for="editPrice">Giá gốc (VNĐ) <span class="required">*</span></label>
+          <input type="number" id="editPrice" name="price" min="0" step="1000" required>
+          <small class="form-help">Hệ thống sẽ tự tính lại giá sau thuế (+{{vatRate}}% VAT)</small>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Hủy</button>
+        <button type="submit" class="btn btn-primary">Lưu Thay Đổi (Cloud)</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openEditModal(id, bookCode, title, author, price) {
+    document.getElementById('editForm').action = '/books/edit/' + id;
+    document.getElementById('editBookCode').value = bookCode;
+    document.getElementById('editTitle').value = title;
+    document.getElementById('editAuthor').value = author;
+    document.getElementById('editPrice').value = price;
+    document.getElementById('editModal').style.display = 'flex';
+  }
+
+  function closeEditModal() {
+    document.getElementById('editModal').style.display = 'none';
+  }
+
+  window.onclick = function(event) {
+    const modal = document.getElementById('editModal');
+    if (event.target === modal) {
+      closeEditModal();
+    }
+  };
+</script>

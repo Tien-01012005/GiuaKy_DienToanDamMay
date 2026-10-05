@@ -99,4 +99,93 @@ router.post('/books', async (req, res) => {
   }
 });
 
+// 3. Tuyến đường SỬA: Cập nhật thông tin sách (Điều hướng vào Read-Write Pool)
+router.post('/books/edit/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { bookCode, title, author, price } = req.body;
+
+    // THUẬT TOÁN BỘ LỌC DỮ LIỆU: Bắt buộc mã sản phẩm có tiền tố là 3 số cuối MSSV (273)
+    const trimmedCode = (bookCode || '').trim();
+    if (!trimmedCode.startsWith(REQUIRED_PREFIX)) {
+      const err = `Từ chối sửa! Mã sản phẩm "${trimmedCode}" không hợp lệ. Bắt buộc phải có tiền tố là 3 số cuối MSSV: "${REQUIRED_PREFIX}".`;
+      if (req.session) {
+        req.session.errorMessage = err;
+      }
+      return res.redirect('/');
+    }
+
+    const numPrice = Number(price);
+    if (isNaN(numPrice) || numPrice < 0) {
+      if (req.session) {
+        req.session.errorMessage = 'Giá gốc không hợp lệ!';
+      }
+      return res.redirect('/');
+    }
+
+    // Tính lại giá sau thuế theo VAT 8%
+    const priceWithVAT = Math.round(numPrice * (1 + VAT_RATE / 100));
+
+    // Cập nhật qua Write Connection
+    const updatedBook = await BookWrite.findByIdAndUpdate(
+      id,
+      {
+        bookCode: trimmedCode,
+        title: title.trim(),
+        author: author.trim(),
+        price: numPrice,
+        vatRate: VAT_RATE,
+        priceWithVAT,
+      },
+      { new: true }
+    );
+
+    if (!updatedBook) {
+      if (req.session) {
+        req.session.errorMessage = 'Không tìm thấy sách cần cập nhật!';
+      }
+      return res.redirect('/');
+    }
+
+    if (req.session) {
+      req.session.successMessage = `Cập nhật sách "${title}" thành công qua tài khoản Read-Write! Giá sau thuế: ${priceWithVAT.toLocaleString('vi-VN')} VNĐ`;
+    }
+
+    res.redirect('/');
+  } catch (error) {
+    console.error('Lỗi khi sửa dữ liệu qua Write Connection:', error);
+    if (req.session) {
+      req.session.errorMessage = `Lỗi cập nhật: ${error.message}`;
+    }
+    res.redirect('/');
+  }
+});
+
+// 4. Tuyến đường XÓA: Xóa sách khỏi Cloud MongoDB Atlas (Điều hướng vào Read-Write Pool)
+router.post('/books/delete/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    // Xóa qua Write Connection
+    const deletedBook = await BookWrite.findByIdAndDelete(id);
+
+    if (deletedBook) {
+      if (req.session) {
+        req.session.successMessage = `Đã xóa sách "${deletedBook.title}" (Mã: ${deletedBook.bookCode}) khỏi Cloud MongoDB Atlas thành công!`;
+      }
+    } else {
+      if (req.session) {
+        req.session.errorMessage = 'Không tìm thấy cuốn sách cần xóa!';
+      }
+    }
+
+    res.redirect('/');
+  } catch (error) {
+    console.error('Lỗi khi xóa dữ liệu qua Write Connection:', error);
+    if (req.session) {
+      req.session.errorMessage = `Lỗi xóa sách: ${error.message}`;
+    }
+    res.redirect('/');
+  }
+});
+
 module.exports = router;
