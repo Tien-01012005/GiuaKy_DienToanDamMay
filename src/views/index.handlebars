@@ -1,0 +1,177 @@
+<!-- Thẻ thông tin kiến trúc Cloud -->
+<div class="metrics-grid">
+  <div class="metric-card">
+    <div class="card-icon">🔐</div>
+    <div class="card-content">
+      <span class="card-title">Bảo Mật Least Privilege</span>
+      <p class="card-desc">02 tài khoản độc lập: <strong>Read-Only</strong> (Xem) & <strong>Read-Write</strong> (Thêm mới)</p>
+    </div>
+  </div>
+  <div class="metric-card">
+    <div class="card-icon">⚡</div>
+    <div class="card-content">
+      <span class="card-title">Stateless Session</span>
+      <p class="card-desc">Lưu tập trung tại <strong>Cloud MongoDB Atlas</strong> (connect-mongo, không lưu RAM)</p>
+    </div>
+  </div>
+  <div class="metric-card">
+    <div class="card-icon">🎯</div>
+    <div class="card-content">
+      <span class="card-title">Bộ Lọc & Thuế VAT</span>
+      <p class="card-desc">Tiền tố mã: <strong>{{requiredPrefix}}</strong> | Thuế suất: <strong>{{vatRate}}%</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- Session Info Badge -->
+{{#if sessionData}}
+<div class="session-box">
+  <div class="session-header">
+    <span class="pulse-icon"></span>
+    <span><strong>Stateless Session Active:</strong> ID <code>{{sessionData.id}}</code></span>
+  </div>
+  <div class="session-detail">
+    <span>Số lần truy cập trong phiên: <strong>{{sessionData.views}}</strong></span>
+    <span class="tag-cloud">Lưu trữ: MongoDB Atlas Cluster0</span>
+  </div>
+</div>
+{{/if}}
+
+<!-- Thông báo lỗi hoặc thành công -->
+{{#if errorMessage}}
+<div class="alert alert-danger" role="alert">
+  <div class="alert-icon">⚠️</div>
+  <div class="alert-body">
+    <strong>LỖI XỬ LÝ:</strong> {{errorMessage}}
+  </div>
+</div>
+{{/if}}
+
+{{#if successMessage}}
+<div class="alert alert-success" role="alert">
+  <div class="alert-icon">✅</div>
+  <div class="alert-body">
+    <strong>THÀNH CÔNG:</strong> {{successMessage}}
+  </div>
+</div>
+{{/if}}
+
+<!-- Form Thêm Sách Mới (Luồng Write) -->
+<section class="card section-card">
+  <div class="section-header">
+    <h2>➕ Thêm Sách Mới (Ghi dữ liệu qua Write Account)</h2>
+    <span class="badge-role write-role">Write Pool Access</span>
+  </div>
+  <form action="/books" method="POST" class="book-form">
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="bookCode">
+          Mã sản phẩm / Sách <span class="required">*</span>
+          <span class="hint-tag">Bắt buộc bắt đầu bằng "{{requiredPrefix}}"</span>
+        </label>
+        <input 
+          type="text" 
+          id="bookCode" 
+          name="bookCode" 
+          placeholder="Ví dụ: {{requiredPrefix}}-BK01" 
+          required 
+          autocomplete="off"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="title">Tên sách <span class="required">*</span></label>
+        <input 
+          type="text" 
+          id="title" 
+          name="title" 
+          placeholder="Nhập tên sách..." 
+          required 
+          autocomplete="off"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="author">Tác giả <span class="required">*</span></label>
+        <input 
+          type="text" 
+          id="author" 
+          name="author" 
+          placeholder="Nhập tên tác giả..." 
+          required 
+          autocomplete="off"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="price">Giá gốc (VNĐ) <span class="required">*</span></label>
+        <input 
+          type="number" 
+          id="price" 
+          name="price" 
+          placeholder="Ví dụ: 100000" 
+          min="0" 
+          step="1000" 
+          required
+        >
+        <small class="form-help">Hệ thống sẽ tự tính giá sau thuế với mức VAT = {{vatRate}}%</small>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">
+        <span>Lưu Sách Vào Cloud MongoDB</span> 🚀
+      </button>
+    </div>
+  </form>
+</section>
+
+<!-- Danh sách Sách (Luồng Read) -->
+<section class="card section-card">
+  <div class="section-header">
+    <h2>📚 Danh Sách Sách (Đọc dữ liệu qua Read-Only Account)</h2>
+    <div class="header-right">
+      <span class="badge-role read-role">Read Pool Access</span>
+      <span class="counter-badge">Tổng: {{books.length}} cuốn</span>
+    </div>
+  </div>
+
+  {{#if books.length}}
+  <div class="table-responsive">
+    <table class="book-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Mã Sách</th>
+          <th>Tên Sách</th>
+          <th>Tác Giả</th>
+          <th>Giá Gốc</th>
+          <th>VAT</th>
+          <th>Giá Sau Thuế</th>
+          <th>Thời Gian Tạo</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each books}}
+        <tr>
+          <td>{{@index}}</td>
+          <td><code class="code-badge">{{this.bookCode}}</code></td>
+          <td class="font-semibold">{{this.title}}</td>
+          <td>{{this.author}}</td>
+          <td>{{this.price}} VNĐ</td>
+          <td><span class="vat-tag">+{{this.vatRate}}%</span></td>
+          <td><strong class="price-highlight">{{this.priceWithVAT}} VNĐ</strong></td>
+          <td class="text-muted">{{this.createdAt}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+  {{else}}
+  <div class="empty-state">
+    <div class="empty-icon">📖</div>
+    <h3>Chưa có sách nào trong cơ sở dữ liệu</h3>
+    <p>Hãy thêm sách mới ở form trên để kiểm tra tính năng ghi dữ liệu và tính thuế VAT!</p>
+  </div>
+  {{/if}}
+</section>

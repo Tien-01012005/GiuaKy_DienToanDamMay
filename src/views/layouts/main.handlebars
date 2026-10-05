@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hệ Thống Quản Lý Sách Cloud - MSSV 23IT273</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="cloud-header">
+      <div class="header-inner">
+        <div class="brand">
+          <div class="brand-icon">☁️</div>
+          <div>
+            <h1>Cloud Book Management</h1>
+            <p class="subtitle">Kiến trúc Đám mây Stateless & Bảo mật Least Privilege</p>
+          </div>
+        </div>
+        <div class="system-status">
+          <span class="badge badge-success">
+            <span class="status-dot"></span> MongoDB Atlas Online
+          </span>
+          <span class="badge badge-info">
+            DB: DB_23IT273
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      {{{body}}}
+    </main>
+
+    <!-- Footer bắt buộc theo đề thi -->
+    <footer class="cloud-footer">
+      <div class="footer-inner">
+        <div class="footer-item">
+          <span class="footer-label">👤 Họ và Tên:</span>
+          <strong class="footer-value">{{studentName}}</strong>
+        </div>
+        <div class="footer-separator">•</div>
+        <div class="footer-item">
+          <span class="footer-label">🎓 MSSV:</span>
+          <strong class="footer-value">{{studentMSSV}}</strong>
+        </div>
+        <div class="footer-separator">•</div>
+        <div class="footer-item">
+          <span class="footer-label">📊 Mức VAT áp dụng:</span>
+          <strong class="footer-value highlight-vat">{{vatRate}}%</strong>
+        </div>
+      </div>
+      <div class="footer-subtext">
+        Bài thi Giữa Kỳ - Môn Điện toán đám mây &copy; 2026
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
