@@ -14,6 +14,9 @@ function configureSession(app) {
     ttl: 14 * 24 * 60 * 60, // Hạn session: 14 ngày (giây)
     autoRemove: 'native',
     touchAfter: 24 * 3600, // Cập nhật session sau mỗi 24h nếu không có thay đổi
+    mongoOptions: {
+      serverSelectionTimeoutMS: 5000,
+    },
   });
 
   sessionStore.on('create', (sessionId) => {
