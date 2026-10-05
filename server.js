@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const { engine } = require('express-handlebars');
 const path = require('path');
+const configureSession = require('./src/config/session');
 const bookRoutes = require('./src/routes/bookRoutes');
 
 const app = express();
@@ -13,6 +14,9 @@ app.use(express.json());
 
 // Phục vụ thư mục static (CSS, JS, hình ảnh)
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Cấu hình Stateless Session lưu trực tiếp trên Cloud MongoDB Atlas
+configureSession(app);
 
 // Cấu hình Template Engine Handlebars
 app.engine(
