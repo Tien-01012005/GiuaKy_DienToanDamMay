@@ -1,5 +1,6 @@
 const session = require('express-session');
-const MongoStore = require('connect-mongo');
+const connectMongo = require('connect-mongo');
+const MongoStore = connectMongo.default || connectMongo.MongoStore || connectMongo;
 
 /**
  * Cấu hình Stateless Session lưu trữ tập trung trực tiếp trên MongoDB Atlas Cloud
