@@ -4,7 +4,8 @@
     <div class="card-icon">🔐</div>
     <div class="card-content">
       <span class="card-title">Bảo Mật Least Privilege</span>
-      <p class="card-desc">02 tài khoản độc lập: <strong>Read-Only</strong> (Xem) & <strong>Read-Write</strong> (Thêm mới)</p>
+      <p class="card-desc">02 tài khoản độc lập: <strong>Read-Only</strong> (Xem) & <strong>Read-Write</strong> (Thêm
+        mới)</p>
     </div>
   </div>
   <div class="metric-card">
@@ -18,7 +19,8 @@
     <div class="card-icon">🎯</div>
     <div class="card-content">
       <span class="card-title">Bộ Lọc & Thuế VAT</span>
-      <p class="card-desc">Tiền tố mã: <strong>{{requiredPrefix}}</strong> | Thuế suất: <strong>{{vatRate}}%</strong></p>
+      <p class="card-desc">Tiền tố mã: <strong>{{requiredPrefix}}</strong> | Thuế suất: <strong>{{vatRate}}%</strong>
+      </p>
     </div>
   </div>
 </div>
@@ -69,51 +71,23 @@
           Mã sản phẩm / Sách <span class="required">*</span>
           <span class="hint-tag">Bắt buộc bắt đầu bằng "{{requiredPrefix}}"</span>
         </label>
-        <input 
-          type="text" 
-          id="bookCode" 
-          name="bookCode" 
-          placeholder="Ví dụ: {{requiredPrefix}}-BK01" 
-          required 
-          autocomplete="off"
-        >
+        <input type="text" id="bookCode" name="bookCode" placeholder="Ví dụ: {{requiredPrefix}}-BK01" required
+          autocomplete="off">
       </div>
 
       <div class="form-group">
         <label for="title">Tên sách <span class="required">*</span></label>
-        <input 
-          type="text" 
-          id="title" 
-          name="title" 
-          placeholder="Nhập tên sách..." 
-          required 
-          autocomplete="off"
-        >
+        <input type="text" id="title" name="title" placeholder="Nhập tên sách..." required autocomplete="off">
       </div>
 
       <div class="form-group">
         <label for="author">Tác giả <span class="required">*</span></label>
-        <input 
-          type="text" 
-          id="author" 
-          name="author" 
-          placeholder="Nhập tên tác giả..." 
-          required 
-          autocomplete="off"
-        >
+        <input type="text" id="author" name="author" placeholder="Nhập tên tác giả..." required autocomplete="off">
       </div>
 
       <div class="form-group">
         <label for="price">Giá gốc (VNĐ) <span class="required">*</span></label>
-        <input 
-          type="number" 
-          id="price" 
-          name="price" 
-          placeholder="Ví dụ: 100000" 
-          min="0" 
-          step="1000" 
-          required
-        >
+        <input type="number" id="price" name="price" placeholder="Ví dụ: 100000" min="0" step="1000" required>
         <small class="form-help">Hệ thống sẽ tự tính giá sau thuế với mức VAT = {{vatRate}}%</small>
       </div>
     </div>
